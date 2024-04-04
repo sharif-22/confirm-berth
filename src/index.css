@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  @apply h-full; /* h-full for fixing the footer at bottom */
+}
+body {
+  @apply h-full; /* h-full for fixing the footer at bottom */
+}
+
+body #root {
+  @apply flex flex-col min-h-full; /* for fixing the footer at bottom */
+}
