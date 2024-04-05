@@ -1,4 +1,7 @@
 import React, { useRef, useState } from "react";
+
+import InputComp from "../components/Form/InputComp";
+
 import { getLocalStorage, setLocalStorage } from "../helpers/LocalStorage";
 import { addObjectIfNotExists, isObjectExists } from "../helpers/manipulations";
 
@@ -67,6 +70,7 @@ const Home = () => {
     if (pnr.length > 9) {
       if (!isObjectExists(DataArr, pnr)) {
         fetchPnr(pnr);
+        // setPnr("");
       }
     }
   };
@@ -77,27 +81,17 @@ const Home = () => {
         <form
           ref={formRef}
           onSubmit={handelSubmit}
-          className="max-w-lg bg-slate-200 p-5 space-y-4 mx-auto my-5 rounded"
+          className="lg:max-w-5xl w-11/12 bg-slate-200 p-3 space-y-4 mx-auto my-5 rounded"
         >
-          <div className="flex flex-col gap-2">
-            <label htmlFor="pnr" className="text-lg font-medium">
-              Enter PNR number
-            </label>
-            <div className="flex justify-between gap-x-4">
-              <input
-                type="number"
-                name="pnr"
-                id="pnr"
-                value={pnr}
-                onChange={handelOnChange}
-                placeholder="Enter PNR number"
-                className="p-2 rounded w-full"
-              />
-              <button className="bg-green-500 text-white font-medium px-5 py-1.5 rounded">
+          <InputComp
+            pnr={pnr}
+            handelOnChange={handelOnChange}
+            children={
+              <button className="bg-green-500 hover:bg-green-500/85 hover:text-black text-white font-medium px-5 py-1.5 rounded">
                 Submit
               </button>
-            </div>
-          </div>
+            }
+          />
         </form>
       </div>
     </>
