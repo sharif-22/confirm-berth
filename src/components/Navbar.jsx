@@ -9,7 +9,7 @@ const Navbar = () => {
             <li>
               <Link
                 to="/"
-                className="text-2xl group hover:text-white font-semibold duration-300"
+                className="text-2xl group text-white font-semibold duration-300"
               >
                 Confirm Berth
               </Link>

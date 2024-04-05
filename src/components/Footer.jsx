@@ -3,11 +3,11 @@ import React from "react";
 const Footer = () => {
   return (
     <div className="mt-auto bg-green-500">
-      <footer className="container py-3 flex flex-col md:flex-row justify-between text-xs">
+      <footer className="text-white container py-3 flex flex-col md:flex-row justify-between text-xs">
         <p className="px-3">
           Made with ❤ by
           <a
-            className="hover:text-white hover:underline mx-1"
+            className="hover:text-black hover:underline mx-1"
             href="https://github.com/sharif-22"
             target="_blank"
           >
@@ -15,7 +15,7 @@ const Footer = () => {
           </a>
           checkout
           <a
-            className="hover:text-white hover:underline mx-1"
+            className="hover:text-black hover:underline mx-1"
             href="https://github.com/sharif-22/confirm-berth"
             target="_blank"
           >

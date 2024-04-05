@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 
 import InputComp from "../components/Form/InputComp";
+import MiniCard from "../components/UI/MiniCard";
 
 import { getLocalStorage, setLocalStorage } from "../helpers/LocalStorage";
 import { addObjectIfNotExists, isObjectExists } from "../helpers/manipulations";
@@ -94,6 +95,20 @@ const Home = () => {
           />
         </form>
       </div>
+      {DataArr.length > 0
+        ? DataArr.map((data) => (
+            <MiniCard
+              pnr={data.id}
+              boardingStation={data.boardingInfo.stationName}
+              boardingTime={data.boardingInfo.arrivalTime}
+              destinationStation={data.destinationInfo.stationName}
+              destinationTime={data.destinationInfo.arrivalTime}
+              travelDate={data.trainInfo.dt}
+              trainName={data.trainInfo.name}
+              trainNum={data.trainInfo.trainNo}
+            />
+          ))
+        : ""}
     </>
   );
 };
