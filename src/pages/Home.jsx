@@ -1,8 +1,11 @@
 import React, { useRef, useState } from "react";
+import { getLocalStorage, setLocalStorage } from "../helpers/LocalStorage";
+import { addObjectIfNotExists, isObjectExists } from "../helpers/manipulations";
 
 const Home = () => {
   const [pnr, setPnr] = useState("");
   const formRef = useRef();
+  const DataArr = getLocalStorage();
 
   const fetchPnr = async (pnrNum) => {
     const url = `https://pnr-status-indian-railway.p.rapidapi.com/pnr-check/${pnrNum}`;
@@ -20,14 +23,24 @@ const Home = () => {
       const { status, code, data } = result;
 
       if (code == 200 && status) {
-        const {
+        const { boardingInfo, destinationInfo, trainInfo, trainRoutes } = data;
+        const pnrData = {
+          id: parseInt(pnr),
           boardingInfo,
           destinationInfo,
-          seatInfo,
           trainInfo,
-          passengerInfo,
-        } = data;
-        // set localstorage
+          trainRoutes,
+        };
+
+        if (DataArr.length === 0) {
+          DataArr.push(pnrData);
+        }
+
+        // if obj is not exist then push and store
+        addObjectIfNotExists(DataArr, pnrData);
+        setLocalStorage(DataArr);
+
+        console.log(pnrData);
       } else {
         console.log(result);
       }
@@ -50,10 +63,12 @@ const Home = () => {
     const formDataObj = Object.fromEntries(formData);
     const { pnr } = formDataObj;
 
-    // check pnr is exist in localstorage
-
-    // below api call is called when pnr not exist
-    fetchPnr(pnr);
+    // below api called when user enter new pnr
+    if (pnr.length > 9) {
+      if (!isObjectExists(DataArr, pnr)) {
+        fetchPnr(pnr);
+      }
+    }
   };
 
   return (
