@@ -5,11 +5,20 @@ import MiniCard from "../components/UI/MiniCard";
 
 import { getLocalStorage, setLocalStorage } from "../helpers/LocalStorage";
 import { addObjectIfNotExists, isObjectExists } from "../helpers/manipulations";
+import {
+  timeStamp,
+  formatDate,
+  formatTime,
+  futureTripsByDate,
+  pastTripsByDate,
+} from "../helpers/dayjs";
 
 const Home = () => {
   const [pnr, setPnr] = useState("");
   const formRef = useRef();
   const DataArr = getLocalStorage();
+  const upCommingTrips = futureTripsByDate(DataArr);
+  const pastTrips = pastTripsByDate(DataArr);
 
   const fetchPnr = async (pnrNum) => {
     const url = `https://pnr-status-indian-railway.p.rapidapi.com/pnr-check/${pnrNum}`;
@@ -34,6 +43,7 @@ const Home = () => {
           destinationInfo,
           trainInfo,
           trainRoutes,
+          timeStamp: timeStamp(trainInfo.dt),
         };
 
         if (DataArr.length === 0) {
@@ -95,15 +105,16 @@ const Home = () => {
           />
         </form>
       </div>
-      {DataArr.length > 0
-        ? DataArr.map((data) => (
+      {upCommingTrips.length > 0
+        ? upCommingTrips.map((data) => (
             <MiniCard
+              key={data.id}
               pnr={data.id}
               boardingStation={data.boardingInfo.stationName}
-              boardingTime={data.boardingInfo.arrivalTime}
+              boardingTime={formatTime(data.boardingInfo.arrivalTime)}
               destinationStation={data.destinationInfo.stationName}
-              destinationTime={data.destinationInfo.arrivalTime}
-              travelDate={data.trainInfo.dt}
+              destinationTime={formatTime(data.destinationInfo.arrivalTime)}
+              travelDate={formatDate(data.trainInfo.dt)}
               trainName={data.trainInfo.name}
               trainNum={data.trainInfo.trainNo}
             />

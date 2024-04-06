@@ -16,13 +16,13 @@ const MiniCard = ({
         <p className="font-semibold text-lg">
           {trainName} ({trainNum})
         </p>
-        <div className="flex justify-between">
+        <div className="flex flex-col gap-1 font-medium opacity-85">
           <small>
-            {boardingStation}- {boardingTime}
+            {boardingStation} : {boardingTime}
           </small>
 
           <small>
-            {destinationStation}- {destinationTime}
+            {destinationStation} : {destinationTime}
           </small>
         </div>
         <p className="font-semibold">PNR-{pnr}</p>
