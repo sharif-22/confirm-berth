@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 
 import InputComp from "../components/Form/InputComp";
 import MiniCard from "../components/UI/MiniCard";
+import ModelPnrCard from "../components/UI/ModelPnrCard";
 
 import { getLocalStorage, setLocalStorage } from "../helpers/LocalStorage";
 import { addObjectIfNotExists, isObjectExists } from "../helpers/manipulations";
@@ -15,6 +16,8 @@ import {
 
 const Home = () => {
   const [pnr, setPnr] = useState("");
+  const [modelOpen, setModelOpen] = useState(false);
+  console.log(modelOpen);
   const formRef = useRef();
   const DataArr = getLocalStorage();
   const upCommingTrips = futureTripsByDate(DataArr);
@@ -36,13 +39,20 @@ const Home = () => {
       const { status, code, data } = result;
 
       if (code == 200 && status) {
-        const { boardingInfo, destinationInfo, trainInfo, trainRoutes } = data;
+        const {
+          boardingInfo,
+          destinationInfo,
+          trainInfo,
+          trainRoutes,
+          passengerInfo,
+        } = data;
         const pnrData = {
           id: parseInt(pnr),
           boardingInfo,
           destinationInfo,
           trainInfo,
           trainRoutes,
+          passengerInfo,
           timeStamp: timeStamp(trainInfo.dt),
         };
 
@@ -117,9 +127,12 @@ const Home = () => {
               travelDate={formatDate(data.trainInfo.dt)}
               trainName={data.trainInfo.name}
               trainNum={data.trainInfo.trainNo}
+              openModel={() => setModelOpen(!modelOpen)}
             />
           ))
         : ""}
+
+      <ModelPnrCard open={modelOpen} onClose={() => setModelOpen(!modelOpen)} />
     </>
   );
 };

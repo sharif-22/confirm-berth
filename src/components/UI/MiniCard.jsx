@@ -9,9 +9,13 @@ const MiniCard = ({
   trainNum,
   pnr,
   travelDate,
+  openModel,
 }) => {
   return (
-    <div className="bg-slate-200 w-11/12 lg:max-w-5xl mx-auto my-2 p-3 rounded flex justify-between">
+    <div
+      onClick={openModel}
+      className="bg-slate-200 w-11/12 lg:max-w-5xl mx-auto my-2 p-3 rounded flex justify-between"
+    >
       <div className="space-y-2">
         <p className="font-semibold text-lg">
           {trainName} ({trainNum})
