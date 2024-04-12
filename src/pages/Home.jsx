@@ -23,7 +23,7 @@ const Home = () => {
   const upCommingTrips = futureTripsByDate(DataArr);
   const pastTrips = pastTripsByDate(DataArr);
 
-  const fetchPnr = async (pnrNum) => {
+  const fetchPnrSearch = async (pnrNum) => {
     const url = `https://pnr-status-indian-railway.p.rapidapi.com/pnr-check/${pnrNum}`;
     const options = {
       method: "GET",
@@ -73,6 +73,56 @@ const Home = () => {
     }
   };
 
+  const fetchPnr = async (pnrNum) => {
+    const url = `https://pnr-status-indian-railway.p.rapidapi.com/pnr-check/${pnrNum}`;
+    const options = {
+      method: "GET",
+      headers: {
+        "X-RapidAPI-Key": import.meta.env.VITE_X_RapidAPI_Key,
+        "X-RapidAPI-Host": "pnr-status-indian-railway.p.rapidapi.com",
+      },
+    };
+
+    try {
+      const response = await fetch(url, options);
+      const result = await response.json();
+      const { status, code, data } = result;
+
+      if (code == 200 && status) {
+        const {
+          boardingInfo,
+          destinationInfo,
+          trainInfo,
+          trainRoutes,
+          passengerInfo,
+        } = data;
+        const pnrData = {
+          id: parseInt(pnrNum),
+          boardingInfo,
+          destinationInfo,
+          trainInfo,
+          trainRoutes,
+          passengerInfo,
+          timeStamp: timeStamp(trainInfo.dt),
+        };
+
+        if (DataArr.length === 0) {
+          DataArr.push(pnrData);
+        }
+
+        // if obj is not exist then push and store
+        // addObjectIfNotExists(DataArr, pnrData);
+        // setLocalStorage(DataArr);
+
+        console.log(pnrData);
+      } else {
+        console.log(result);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handelOnChange = (e) => {
     const value = e.target.value;
     if (value.length <= 10) {
@@ -90,7 +140,7 @@ const Home = () => {
     // below api called when user enter new pnr
     if (pnr.length > 9) {
       if (!isObjectExists(DataArr, pnr)) {
-        fetchPnr(pnr);
+        fetchPnrSearch(pnr);
         // setPnr("");
       }
     }
@@ -127,7 +177,23 @@ const Home = () => {
               travelDate={formatDate(data.trainInfo.dt)}
               trainName={data.trainInfo.name}
               trainNum={data.trainInfo.trainNo}
-              openModel={() => setModelOpen(!modelOpen)}
+              openModel={(e) => {
+                //  need to fix e.target issue for better ux any way handel this error
+                const target = e.target;
+                const targetParentEl = target.parentElement;
+                let pnrEl = target.querySelector(".pnr");
+                // console.log(pnrEl);
+                if (!pnrEl) {
+                  pnrEl = targetParentEl.nextSibling.querySelector(".pnr");
+                  console.log(pnrEl);
+                }
+
+                if (pnrEl) {
+                  setModelOpen(!modelOpen);
+                  const pnrNumber = pnrEl.textContent.slice(4);
+                  const modelData = fetchPnr(pnrNumber);
+                }
+              }}
             />
           ))
         : ""}

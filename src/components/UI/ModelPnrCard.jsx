@@ -1,6 +1,6 @@
 import { RiCloseFill } from "react-icons/ri";
 
-export default function ModalPnrCard({ open, onClose }) {
+export default function ModalPnrCard({ open, onClose, pnrId }) {
   return (
     // backdrop
     <div
@@ -18,6 +18,7 @@ export default function ModalPnrCard({ open, onClose }) {
             `}
       >
         <div className="w-full relative  h-1/2">
+          <div>{pnrId}</div>
           <button
             onClick={onClose}
             className="absolute top-2 right-2 text-white font-medium group"

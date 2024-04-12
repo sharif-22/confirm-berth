@@ -12,7 +12,7 @@ const MiniCard = ({
   openModel,
 }) => {
   return (
-    <div
+    <section
       onClick={openModel}
       className="bg-slate-200 w-11/12 lg:max-w-5xl mx-auto my-2 p-3 rounded flex justify-between"
     >
@@ -29,10 +29,10 @@ const MiniCard = ({
             {destinationStation} : {destinationTime}
           </small>
         </div>
-        <p className="font-semibold">PNR-{pnr}</p>
+        <p className="font-semibold pnr">PNR-{pnr}</p>
       </div>
       <p className="font-semibold text-lg">{travelDate}</p>
-    </div>
+    </section>
   );
 };
 
