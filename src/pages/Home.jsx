@@ -4,7 +4,11 @@ import InputComp from "../components/Form/InputComp";
 import MiniCard from "../components/UI/MiniCard";
 import ModelPnrCard from "../components/UI/ModelPnrCard";
 
-import { getLocalStorage, setLocalStorage } from "../helpers/LocalStorage";
+import {
+  getLocalStorage,
+  setLocalStorage,
+  setSessionStorage,
+} from "../helpers/LocalStorage";
 import { addObjectIfNotExists, isObjectExists } from "../helpers/manipulations";
 import {
   timeStamp,
@@ -16,6 +20,7 @@ import {
 
 const Home = () => {
   const [pnr, setPnr] = useState("");
+  const [selectedPnr, setSelectedPnr] = useState("");
   const [modelOpen, setModelOpen] = useState(false);
   console.log(modelOpen);
   const formRef = useRef();
@@ -65,6 +70,7 @@ const Home = () => {
         setLocalStorage(DataArr);
 
         console.log(pnrData);
+        return pnrData;
       } else {
         console.log(result);
       }
@@ -105,7 +111,7 @@ const Home = () => {
           passengerInfo,
           timeStamp: timeStamp(trainInfo.dt),
         };
-
+        setSessionStorage(pnrNum, passengerInfo);
         if (DataArr.length === 0) {
           DataArr.push(pnrData);
         }
@@ -114,7 +120,7 @@ const Home = () => {
         // addObjectIfNotExists(DataArr, pnrData);
         // setLocalStorage(DataArr);
 
-        console.log(pnrData);
+        // console.log(pnrData);
       } else {
         console.log(result);
       }
@@ -178,27 +184,19 @@ const Home = () => {
               trainName={data.trainInfo.name}
               trainNum={data.trainInfo.trainNo}
               openModel={(e) => {
-                //  need to fix e.target issue for better ux any way handel this error
-                const target = e.target;
-                const targetParentEl = target.parentElement;
-                let pnrEl = target.querySelector(".pnr");
-                // console.log(pnrEl);
-                if (!pnrEl) {
-                  pnrEl = targetParentEl.nextSibling.querySelector(".pnr");
-                  console.log(pnrEl);
-                }
-
-                if (pnrEl) {
-                  setModelOpen(!modelOpen);
-                  const pnrNumber = pnrEl.textContent.slice(4);
-                  const modelData = fetchPnr(pnrNumber);
-                }
+                setSelectedPnr(data.id);
+                setModelOpen(!modelOpen);
+                fetchPnr(data.id);
               }}
             />
           ))
         : ""}
 
-      <ModelPnrCard open={modelOpen} onClose={() => setModelOpen(!modelOpen)} />
+      <ModelPnrCard
+        pnrId={selectedPnr}
+        open={modelOpen}
+        onClose={() => setModelOpen(!modelOpen)}
+      />
     </>
   );
 };
