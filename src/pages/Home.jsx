@@ -6,6 +6,7 @@ import ModelPnrCard from "../components/UI/ModelPnrCard";
 
 import {
   getLocalStorage,
+  getSessionStorage,
   setLocalStorage,
   setSessionStorage,
 } from "../helpers/LocalStorage";
@@ -111,7 +112,7 @@ const Home = () => {
           passengerInfo,
           timeStamp: timeStamp(trainInfo.dt),
         };
-        setSessionStorage(pnrNum, passengerInfo);
+        setSessionStorage(pnrNum, pnrData);
         if (DataArr.length === 0) {
           DataArr.push(pnrData);
         }
@@ -186,7 +187,9 @@ const Home = () => {
               openModel={(e) => {
                 setSelectedPnr(data.id);
                 setModelOpen(!modelOpen);
-                fetchPnr(data.id);
+                if (getSessionStorage(data.id).length === 0) {
+                  fetchPnr(data.id);
+                }
               }}
             />
           ))
