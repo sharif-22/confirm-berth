@@ -13,20 +13,20 @@ import {
 import { addObjectIfNotExists, isObjectExists } from "../helpers/manipulations";
 import {
   timeStamp,
-  formatDate,
-  formatTime,
   futureTripsByDate,
   pastTripsByDate,
 } from "../helpers/dayjs";
 
 const Home = () => {
+  const DataArr = getLocalStorage();
+  const formRef = useRef();
   const [pnr, setPnr] = useState("");
   const [selectedPnr, setSelectedPnr] = useState("");
   const [modelOpen, setModelOpen] = useState(false);
-  console.log(modelOpen);
-  const formRef = useRef();
-  const DataArr = getLocalStorage();
-  const upCommingTrips = futureTripsByDate(DataArr);
+  const [upCommingTrips, setUpCommingTrips] = useState(
+    futureTripsByDate(DataArr)
+  );
+
   const pastTrips = pastTripsByDate(DataArr);
 
   const fetchPnrSearch = async (pnrNum) => {
@@ -70,7 +70,8 @@ const Home = () => {
         addObjectIfNotExists(DataArr, pnrData);
         setLocalStorage(DataArr);
 
-        console.log(pnrData);
+        setUpCommingTrips(futureTripsByDate(DataArr));
+        // console.log(pnrData);
         return pnrData;
       } else {
         console.log(result);
@@ -175,15 +176,8 @@ const Home = () => {
       {upCommingTrips.length > 0
         ? upCommingTrips.map((data) => (
             <MiniCard
+              data={data}
               key={data.id}
-              pnr={data.id}
-              boardingStation={data.boardingInfo.stationName}
-              boardingTime={formatTime(data.boardingInfo.arrivalTime)}
-              destinationStation={data.destinationInfo.stationName}
-              destinationTime={formatTime(data.destinationInfo.arrivalTime)}
-              travelDate={formatDate(data.trainInfo.dt)}
-              trainName={data.trainInfo.name}
-              trainNum={data.trainInfo.trainNo}
               openModel={(e) => {
                 setSelectedPnr(data.id);
                 setModelOpen(!modelOpen);

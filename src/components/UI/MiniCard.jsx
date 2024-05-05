@@ -1,16 +1,9 @@
 import React from "react";
+import { formatDate, formatTime } from "../../helpers/dayjs";
 
-const MiniCard = ({
-  boardingStation,
-  boardingTime,
-  destinationStation,
-  destinationTime,
-  trainName,
-  trainNum,
-  pnr,
-  travelDate,
-  openModel,
-}) => {
+const MiniCard = ({ data, openModel }) => {
+  const { boardingInfo, id, destinationInfo, trainInfo } = data;
+
   return (
     <section
       onClick={openModel}
@@ -18,20 +11,21 @@ const MiniCard = ({
     >
       <div className="space-y-2">
         <p className="font-semibold text-lg">
-          {trainName} ({trainNum})
+          {trainInfo.name} ({trainInfo.trainNo})
         </p>
         <div className="flex flex-col gap-1 font-medium opacity-85">
           <small>
-            {boardingStation} : {boardingTime}
+            {boardingInfo.stationName} : {formatTime(boardingInfo.arrivalTime)}
           </small>
 
           <small>
-            {destinationStation} : {destinationTime}
+            {destinationInfo.stationName} :{" "}
+            {formatTime(destinationInfo.arrivalTime)}
           </small>
         </div>
-        <p className="font-semibold pnr">PNR-{pnr}</p>
+        <p className="font-semibold pnr">PNR - {id}</p>
       </div>
-      <p className="font-semibold text-lg">{travelDate}</p>
+      <p className="font-semibold text-lg">{formatDate(trainInfo.dt)}</p>
     </section>
   );
 };
