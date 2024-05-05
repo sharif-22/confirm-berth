@@ -16,6 +16,7 @@ import {
   futureTripsByDate,
   pastTripsByDate,
 } from "../helpers/dayjs";
+import PlaceholderCard from "../components/UI/PlaceholderCard";
 
 const Home = () => {
   const DataArr = getLocalStorage();
@@ -150,9 +151,9 @@ const Home = () => {
     if (pnr.length > 9) {
       if (!isObjectExists(DataArr, pnr)) {
         fetchPnrSearch(pnr);
-        // setPnr("");
       }
     }
+    setPnr("");
   };
 
   return (
@@ -197,25 +198,29 @@ const Home = () => {
         </button>
       </div>
       {/* view trips based on selected above btns  */}
-      {viewCommingTrips
-        ? upCommingTrips.length > 0
-          ? upCommingTrips.map((data) => (
-              <MiniCard
-                data={data}
-                key={data.id}
-                openModel={(e) => {
-                  setSelectedPnr(data.id);
-                  setModelOpen(!modelOpen);
-                  if (getSessionStorage(data.id).length === 0) {
-                    fetchPnr(data.id);
-                  }
-                }}
-              />
-            ))
-          : "No Data "
-        : pastTrips.length > 0
-        ? pastTrips.map((data) => <MiniCard data={data} key={data.id} />)
-        : "No prev Data"}
+      {viewCommingTrips ? (
+        upCommingTrips.length > 0 ? (
+          upCommingTrips.map((data) => (
+            <MiniCard
+              data={data}
+              key={data.id}
+              openModel={(e) => {
+                setSelectedPnr(data.id);
+                setModelOpen(!modelOpen);
+                if (getSessionStorage(data.id).length === 0) {
+                  fetchPnr(data.id);
+                }
+              }}
+            />
+          ))
+        ) : (
+          <PlaceholderCard placeholderTxt={"Enter pnr number"} />
+        )
+      ) : pastTrips.length > 0 ? (
+        pastTrips.map((data) => <MiniCard data={data} key={data.id} />)
+      ) : (
+        <PlaceholderCard placeholderTxt={"Your Past travel history is Empty"} />
+      )}
       <ModelPnrCard
         pnrId={selectedPnr}
         open={modelOpen}

@@ -7,7 +7,7 @@ const MiniCard = ({ data, openModel }) => {
   return (
     <section
       onClick={openModel}
-      className="bg-slate-200 w-11/12 lg:max-w-5xl mx-auto my-2 p-3 rounded flex justify-between"
+      className="bg-slate-200 w-11/12 lg:max-w-5xl mx-auto my-2 p-3 rounded flex justify-between hover:shadow-lg duration-300 transition-all cursor-pointer"
     >
       <div className="space-y-2">
         <p className="font-semibold text-lg">
