@@ -26,6 +26,7 @@ const Home = () => {
   const [upCommingTrips, setUpCommingTrips] = useState(
     futureTripsByDate(DataArr)
   );
+  const [viewCommingTrips, setViewCommingTrips] = useState(true);
 
   const pastTrips = pastTripsByDate(DataArr);
 
@@ -156,6 +157,7 @@ const Home = () => {
 
   return (
     <>
+      {/*Input form */}
       <div>
         <form
           ref={formRef}
@@ -173,22 +175,47 @@ const Home = () => {
           />
         </form>
       </div>
-      {upCommingTrips.length > 0
-        ? upCommingTrips.map((data) => (
-            <MiniCard
-              data={data}
-              key={data.id}
-              openModel={(e) => {
-                setSelectedPnr(data.id);
-                setModelOpen(!modelOpen);
-                if (getSessionStorage(data.id).length === 0) {
-                  fetchPnr(data.id);
-                }
-              }}
-            />
-          ))
-        : ""}
-
+      {/*nxt && prev trips buttons */}
+      <div className="lg:max-w-5xl w-11/12 bg-slate-200 mx-auto rounded flex gap-2 p-2">
+        <button
+          onClick={() => setViewCommingTrips(true)}
+          className={`font-medium p-2 w-full rounded ${
+            viewCommingTrips ? "bg-green-500 text-white" : "bg-white"
+          }`}
+          type="button"
+        >
+          Comming Trips
+        </button>
+        <button
+          onClick={() => setViewCommingTrips(false)}
+          className={`font-medium p-2 w-full rounded ${
+            viewCommingTrips ? "bg-white" : "bg-green-500 text-white"
+          }`}
+          type="button"
+        >
+          Past Trips
+        </button>
+      </div>
+      {/* view trips based on selected above btns  */}
+      {viewCommingTrips
+        ? upCommingTrips.length > 0
+          ? upCommingTrips.map((data) => (
+              <MiniCard
+                data={data}
+                key={data.id}
+                openModel={(e) => {
+                  setSelectedPnr(data.id);
+                  setModelOpen(!modelOpen);
+                  if (getSessionStorage(data.id).length === 0) {
+                    fetchPnr(data.id);
+                  }
+                }}
+              />
+            ))
+          : "No Data "
+        : pastTrips.length > 0
+        ? pastTrips.map((data) => <MiniCard data={data} key={data.id} />)
+        : "No prev Data"}
       <ModelPnrCard
         pnrId={selectedPnr}
         open={modelOpen}
