@@ -24,10 +24,11 @@ const Home = () => {
   const [pnr, setPnr] = useState("");
   const [selectedPnr, setSelectedPnr] = useState("");
   const [modelOpen, setModelOpen] = useState(false);
-  const [upCommingTrips, setUpCommingTrips] = useState(
+  const [modelData, setModelData] = useState(undefined);
+  const [upComingTrips, setupComingTrips] = useState(
     futureTripsByDate(DataArr)
   );
-  const [viewCommingTrips, setViewCommingTrips] = useState(true);
+  const [viewComingTrips, setViewComingTrips] = useState(true);
 
   const pastTrips = pastTripsByDate(DataArr);
 
@@ -72,7 +73,7 @@ const Home = () => {
         addObjectIfNotExists(DataArr, pnrData);
         setLocalStorage(DataArr);
 
-        setUpCommingTrips(futureTripsByDate(DataArr));
+        setupComingTrips(futureTripsByDate(DataArr));
         // console.log(pnrData);
         return pnrData;
       } else {
@@ -94,10 +95,10 @@ const Home = () => {
     };
 
     try {
+      setModelData(undefined);
       const response = await fetch(url, options);
       const result = await response.json();
       const { status, code, data } = result;
-
       if (code == 200 && status) {
         const {
           boardingInfo,
@@ -116,6 +117,7 @@ const Home = () => {
           timeStamp: timeStamp(trainInfo.dt),
         };
         setSessionStorage(pnrNum, pnrData);
+        setModelData(pnrData);
         if (DataArr.length === 0) {
           DataArr.push(pnrData);
         }
@@ -179,18 +181,18 @@ const Home = () => {
       {/*nxt && prev trips buttons */}
       <div className="lg:max-w-5xl w-11/12 bg-slate-200 mx-auto rounded flex gap-2 p-2">
         <button
-          onClick={() => setViewCommingTrips(true)}
+          onClick={() => setViewComingTrips(true)}
           className={`font-medium p-2 w-full rounded ${
-            viewCommingTrips ? "bg-green-500 text-white" : "bg-white"
+            viewComingTrips ? "bg-green-500 text-white" : "bg-white"
           }`}
           type="button"
         >
           Comming Trips
         </button>
         <button
-          onClick={() => setViewCommingTrips(false)}
+          onClick={() => setViewComingTrips(false)}
           className={`font-medium p-2 w-full rounded ${
-            viewCommingTrips ? "bg-white" : "bg-green-500 text-white"
+            viewComingTrips ? "bg-white" : "bg-green-500 text-white"
           }`}
           type="button"
         >
@@ -198,9 +200,9 @@ const Home = () => {
         </button>
       </div>
       {/* view trips based on selected above btns  */}
-      {viewCommingTrips ? (
-        upCommingTrips.length > 0 ? (
-          upCommingTrips.map((data) => (
+      {viewComingTrips ? (
+        upComingTrips.length > 0 ? (
+          upComingTrips.map((data) => (
             <MiniCard
               data={data}
               key={data.id}
@@ -208,7 +210,10 @@ const Home = () => {
                 setSelectedPnr(data.id);
                 setModelOpen(!modelOpen);
                 if (getSessionStorage(data.id).length === 0) {
+                  console.log("fetching....");
                   fetchPnr(data.id);
+                } else {
+                  setModelData(getSessionStorage(data.id));
                 }
               }}
             />
