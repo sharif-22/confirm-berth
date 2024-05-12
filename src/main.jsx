@@ -11,8 +11,7 @@ import Footer from "./components/Footer";
 
 // pages
 import Home from "./pages/Home";
-import Trips from "./pages/Trips";
-import Trip from "./pages/Trip";
+import PageNotFound from "./pages/PageNotFound";
 
 const App = () => {
   return (
@@ -33,15 +32,8 @@ const route = createBrowserRouter([
         path: "/",
         element: <Home />,
       },
-      {
-        path: "/trips",
-        element: <Trips />,
-      },
-      {
-        path: "/trips/:pnr",
-        element: <Trip />,
-      },
     ],
+    errorElement: <PageNotFound />,
   },
 ]);
 

@@ -187,7 +187,7 @@ const Home = () => {
           }`}
           type="button"
         >
-          Comming Trips
+          Coming Trips
         </button>
         <button
           onClick={() => setViewComingTrips(false)}
