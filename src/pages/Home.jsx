@@ -4,6 +4,9 @@ import InputComp from "../components/Form/InputComp";
 import MiniCard from "../components/UI/MiniCard";
 import ModelPnrCard from "../components/UI/ModelPnrCard";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import {
   getLocalStorage,
   getSessionStorage,
@@ -77,6 +80,7 @@ const Home = () => {
         // console.log(pnrData);
         return pnrData;
       } else {
+        toast.error("Invalid PNR");
         console.log(result);
       }
     } catch (error) {
@@ -160,6 +164,7 @@ const Home = () => {
 
   return (
     <>
+      <ToastContainer />
       {/*Input form */}
       <div>
         <form
