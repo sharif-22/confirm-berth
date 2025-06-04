@@ -1,11 +1,28 @@
 import { RiCloseFill } from "react-icons/ri";
 import { getSessionStorage } from "../../helpers/LocalStorage";
-import { formatDate, formatTime } from "../../helpers/dayjs";
+import {
+  convertTo24HrDateLabel,
+  formatDate,
+  formatTime,
+} from "../../helpers/dayjs";
 import { HiArrowSmallRight } from "react-icons/hi2";
 import { ShimmerButton, ShimmerThumbnail } from "react-shimmer-effects";
 export default function ModalPnrCard({ open, onClose, pnrId }) {
-  const { passengerInfo, id, boardingInfo, destinationInfo, trainInfo } =
-    getSessionStorage(pnrId);
+  const {
+    passengerInfo,
+    id,
+    boardingInfo,
+    destinationInfo,
+    trainInfo,
+    pnrNumber,
+    passengerList,
+    dateOfJourney,
+    boardingPoint,
+    destinationStation,
+    arrivalDate,
+    trainName,
+    trainNumber,
+  } = getSessionStorage(pnrId);
 
   return (
     // backdrop
@@ -24,40 +41,42 @@ export default function ModalPnrCard({ open, onClose, pnrId }) {
             `}
       >
         <div className="w-full relative  h-fit mx-auto">
-          {id != undefined ? (
+          {pnrNumber != undefined ? (
             <div>
               {/* current status Details */}
               <h1 className="p-3 text-xl font-medium bg-green-500 rounded-t-md text-white">
-                {id}
+                {pnrNumber}
               </h1>
               <div className="px-4 py-2 space-y-1">
                 <p className="font-medium text-lg ">
-                  {formatDate(trainInfo?.dt)}
+                  {convertTo24HrDateLabel(dateOfJourney).slice(8)}
+                  {}
                 </p>
                 <p className="flex gap-2 items-center">
                   <span className="flex flex-col text-lg">
-                    {boardingInfo?.stationName}
+                    {boardingPoint}
                     <small className="opacity-65">
-                      {formatTime(boardingInfo?.arrivalTime)}
+                      {convertTo24HrDateLabel(dateOfJourney)}
                     </small>
                   </span>
                   <HiArrowSmallRight size={30} />
                   <span className="flex flex-col text-lg">
-                    {destinationInfo?.stationName}
+                    {destinationStation}
                     <small className="opacity-65">
-                      {formatTime(destinationInfo?.arrivalTime)}
+                      {convertTo24HrDateLabel(arrivalDate)}
                     </small>
                   </span>
                 </p>
 
                 <p className="font-medium opacity-65">
-                  {trainInfo?.name} ({trainInfo?.trainNo})
+                  {trainName} ({trainNumber})
                 </p>
                 <p className="font-semibold">Current Status </p>
                 <ol className="list-decimal px-5 space-y-1">
-                  {passengerInfo?.map((data, index) => (
+                  {passengerList?.map((data, index) => (
                     <li key={index} className="text-lg font-medium opacity-80">
-                      {data.currentCoach}, {data.currentBerthNo}
+                      {/* {data.currentStatusDetails}, {data.currentBerthNo} */}
+                      {data.currentStatusDetails}
                     </li>
                   ))}
                 </ol>

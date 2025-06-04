@@ -29,26 +29,49 @@ function formatTime(timeString) {
 }
 
 // get dataArr and sort it & filter it by future and past trips
+// function futureTripsByDate(trips) {
+//   const futureTrips = [...trips];
+//   const today = dayjs().startOf("day");
+//   const upCommingTrips = futureTrips
+//     .sort((a, b) => a.timeStamp - b.timeStamp)
+//     .filter((obj) => {
+//       return obj.timeStamp >= today.valueOf();
+//     });
+//   return upCommingTrips;
+// }
+
 function futureTripsByDate(trips) {
-  const futureTrips = [...trips];
   const today = dayjs().startOf("day");
-  const upCommingTrips = futureTrips
+
+  const upComingTrips = trips
+    .map((trip) => ({
+      ...trip,
+      // Convert `dateOfJourney` string to timestamp for comparison
+      timeStamp: dayjs(trip.dateOfJourney).valueOf(),
+    }))
     .sort((a, b) => a.timeStamp - b.timeStamp)
-    .filter((obj) => {
-      return obj.timeStamp >= today.valueOf();
-    });
-  return upCommingTrips;
+    .filter((trip) => trip.timeStamp >= today.valueOf());
+
+  return upComingTrips;
+}
+
+function convertTo24HrDateLabel(dateStr) {
+  return dayjs(dateStr).format("HH:mm - D MMM YY");
 }
 
 function pastTripsByDate(trips) {
-  const futureTrips = [...trips];
   const today = dayjs().startOf("day");
-  const upCommingTrips = futureTrips
+  const upComingTrips = trips
+    .map((trip) => ({
+      ...trip,
+      // Convert `dateOfJourney` string to timestamp for comparison
+      timeStamp: dayjs(trip.dateOfJourney).valueOf(),
+    }))
     .sort((a, b) => b.timeStamp - a.timeStamp)
     .filter((obj) => {
       return obj.timeStamp <= today.valueOf();
     });
-  return upCommingTrips;
+  return upComingTrips;
 }
 
 export {
@@ -57,4 +80,5 @@ export {
   timeStamp,
   futureTripsByDate,
   pastTripsByDate,
+  convertTo24HrDateLabel,
 };

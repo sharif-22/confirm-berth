@@ -18,8 +18,12 @@ import {
   timeStamp,
   futureTripsByDate,
   pastTripsByDate,
+  convertTo24HrDateLabel,
 } from "../helpers/dayjs";
 import PlaceholderCard from "../components/UI/PlaceholderCard";
+
+// import { pnrServices } from "../apis/pnrServices";
+import { getPNRStatus } from "../apis/pnrServices/index.js";
 
 const Home = () => {
   const DataArr = getLocalStorage();
@@ -35,39 +39,55 @@ const Home = () => {
 
   const pastTrips = pastTripsByDate(DataArr);
 
+  const fetchPnrStatus = async (pnrNumber) => {
+    try {
+      const response = await getPNRStatus(pnrNumber);
+      // console.log("Response from PNR status API:", response);
+      return response;
+    } catch (error) {
+      console.error("Error fetching PNR status:", error);
+      throw error;
+    }
+  };
+  // fetchPnrStatus("4632363385");
+  // console.log("pnrStatus", pnrStatus);
+
   const fetchPnrSearch = async (pnrNum) => {
-    const url = `https://pnr-status-indian-railway.p.rapidapi.com/pnr-check/${pnrNum}`;
-    const options = {
-      method: "GET",
-      headers: {
-        "X-RapidAPI-Key": import.meta.env.VITE_X_RapidAPI_Key,
-        "X-RapidAPI-Host": "pnr-status-indian-railway.p.rapidapi.com",
-      },
-    };
+    // const url = `https://pnr-status-indian-railway.p.rapidapi.com/pnr-check/${pnrNum}`;
+    // const options = {
+    //   method: "GET",
+    //   headers: {
+    //     "X-RapidAPI-Key": import.meta.env.VITE_X_RapidAPI_Key,
+    //     "X-RapidAPI-Host": "pnr-status-indian-railway.p.rapidapi.com",
+    //   },
+    // };
 
     try {
-      const response = await fetch(url, options);
-      const result = await response.json();
+      // const response = await fetch(url, options);
+      // const result = await response.json();
+      const response = await fetchPnrStatus(pnrNum);
+      const result = response;
+      console.log("Response from PNR search API:", result);
       const { status, code, data } = result;
 
-      if (code == 200 && status) {
-        const {
-          boardingInfo,
-          destinationInfo,
-          trainInfo,
-          trainRoutes,
-          passengerInfo,
-        } = data;
-        const pnrData = {
-          id: parseInt(pnr),
-          boardingInfo,
-          destinationInfo,
-          trainInfo,
-          trainRoutes,
-          passengerInfo,
-          timeStamp: timeStamp(trainInfo.dt),
-        };
-
+      if (code == 200) {
+        // const {
+        //   boardingInfo,
+        //   destinationInfo,
+        //   trainInfo,
+        //   trainRoutes,
+        //   passengerInfo,
+        // } = data;
+        // const pnrData = {
+        //   id: parseInt(pnr),
+        //   boardingInfo,
+        //   destinationInfo,
+        //   trainInfo,
+        //   trainRoutes,
+        //   passengerInfo,
+        //   timeStamp: timeStamp(trainInfo.dt),
+        // };
+        const pnrData = data;
         if (DataArr.length === 0) {
           DataArr.push(pnrData);
         }
@@ -89,37 +109,39 @@ const Home = () => {
   };
 
   const fetchPnr = async (pnrNum) => {
-    const url = `https://pnr-status-indian-railway.p.rapidapi.com/pnr-check/${pnrNum}`;
-    const options = {
-      method: "GET",
-      headers: {
-        "X-RapidAPI-Key": import.meta.env.VITE_X_RapidAPI_Key,
-        "X-RapidAPI-Host": "pnr-status-indian-railway.p.rapidapi.com",
-      },
-    };
+    // const url = `https://pnr-status-indian-railway.p.rapidapi.com/pnr-check/${pnrNum}`;
+    // const options = {
+    //   method: "GET",
+    //   headers: {
+    //     "X-RapidAPI-Key": import.meta.env.VITE_X_RapidAPI_Key,
+    //     "X-RapidAPI-Host": "pnr-status-indian-railway.p.rapidapi.com",
+    //   },
+    // };
 
     try {
       setModelData(undefined);
-      const response = await fetch(url, options);
-      const result = await response.json();
+      const response = await fetchPnrStatus(pnrNum);
+      const result = response;
       const { status, code, data } = result;
-      if (code == 200 && status) {
-        const {
-          boardingInfo,
-          destinationInfo,
-          trainInfo,
-          trainRoutes,
-          passengerInfo,
-        } = data;
-        const pnrData = {
-          id: parseInt(pnrNum),
-          boardingInfo,
-          destinationInfo,
-          trainInfo,
-          trainRoutes,
-          passengerInfo,
-          timeStamp: timeStamp(trainInfo.dt),
-        };
+      if (code == 200) {
+        // const {
+        //   boardingInfo,
+        //   destinationInfo,
+        //   trainInfo,
+        //   trainRoutes,
+        //   passengerInfo,
+        // } = data;
+        // const pnrData = {
+        //   id: parseInt(pnrNum),
+        //   boardingInfo,
+        //   destinationInfo,
+        //   trainInfo,
+        //   trainRoutes,
+        //   passengerInfo,
+        //   timeStamp: timeStamp(trainInfo.dt),
+        // };
+
+        const pnrData = data;
         setSessionStorage(pnrNum, pnrData);
         setModelData(pnrData);
         if (DataArr.length === 0) {
@@ -210,15 +232,15 @@ const Home = () => {
           upComingTrips.map((data) => (
             <MiniCard
               data={data}
-              key={data.id}
+              key={data.pnrNumber}
               openModel={(e) => {
-                setSelectedPnr(data.id);
+                setSelectedPnr(data.pnrNumber);
                 setModelOpen(!modelOpen);
-                if (getSessionStorage(data.id).length === 0) {
+                if (getSessionStorage(data.pnrNumber).length === 0) {
                   console.log("fetching....");
-                  fetchPnr(data.id);
+                  fetchPnr(data.pnrNumber);
                 } else {
-                  setModelData(getSessionStorage(data.id));
+                  setModelData(getSessionStorage(data.pnrNumber));
                 }
               }}
             />
