@@ -1,8 +1,21 @@
 import React from "react";
-import { formatDate, formatTime } from "../../helpers/dayjs";
+import {
+  formatDate,
+  formatTime,
+  convertTo24HrDateLabel,
+} from "../../helpers/dayjs";
 
 const MiniCard = ({ data, openModel }) => {
-  const { boardingInfo, id, destinationInfo, trainInfo } = data;
+  // const { boardingInfo, id, destinationInfo, trainInfo } = data;
+  const {
+    trainName,
+    trainNumber,
+    sourceStation,
+    dateOfJourney,
+    destinationStation,
+    arrivalDate,
+    pnrNumber,
+  } = data;
 
   return (
     <section
@@ -11,21 +24,22 @@ const MiniCard = ({ data, openModel }) => {
     >
       <div className="space-y-2">
         <p className="font-semibold text-lg">
-          {trainInfo.name} ({trainInfo.trainNo})
+          {trainName} ({trainNumber})
         </p>
         <div className="flex flex-col gap-1 font-medium opacity-85">
           <small>
-            {boardingInfo.stationName} : {formatTime(boardingInfo.arrivalTime)}
+            {sourceStation} : {convertTo24HrDateLabel(dateOfJourney)}
           </small>
 
           <small>
-            {destinationInfo.stationName} :{" "}
-            {formatTime(destinationInfo.arrivalTime)}
+            {destinationStation} : {convertTo24HrDateLabel(arrivalDate)}
           </small>
         </div>
-        <p className="font-semibold pnr">PNR - {id}</p>
+        <p className="font-semibold pnr">PNR - {pnrNumber}</p>
       </div>
-      <p className="font-semibold text-lg">{formatDate(trainInfo.dt)}</p>
+      <p className="font-semibold text-lg">
+        {convertTo24HrDateLabel(dateOfJourney)}
+      </p>
     </section>
   );
 };
