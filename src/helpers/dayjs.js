@@ -28,18 +28,6 @@ function formatTime(timeString) {
   return formattedTime;
 }
 
-// get dataArr and sort it & filter it by future and past trips
-// function futureTripsByDate(trips) {
-//   const futureTrips = [...trips];
-//   const today = dayjs().startOf("day");
-//   const upCommingTrips = futureTrips
-//     .sort((a, b) => a.timeStamp - b.timeStamp)
-//     .filter((obj) => {
-//       return obj.timeStamp >= today.valueOf();
-//     });
-//   return upCommingTrips;
-// }
-
 function futureTripsByDate(trips) {
   const today = dayjs().startOf("day");
 
