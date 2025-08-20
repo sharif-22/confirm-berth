@@ -29,6 +29,7 @@ const Home = () => {
   const formRef = useRef();
 
   const upComingTrips = futureTripsByDate(dataArr);
+  console.log(upComingTrips);
   const pastTrips = pastTripsByDate(dataArr);
 
   /** --- API CALL --- */
@@ -53,6 +54,7 @@ const Home = () => {
 
         if (code === 200) {
           const updatedData = addObjectIfNotExists([...dataArr], data);
+          console.log(updatedData);
           setLocalStorage(updatedData);
           setSessionStorage(pnrNum, data);
 
@@ -104,6 +106,8 @@ const Home = () => {
 
     if (pnr.length > 9 && !isObjectExists(dataArr, pnr)) {
       fetchPnrSearch(pnr);
+    } else {
+      toast.error("Please enter a new PNR number it is already exists.");
     }
     setPnr("");
   };

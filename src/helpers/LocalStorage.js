@@ -1,14 +1,15 @@
 function getLocalStorage() {
   let localStorageArr;
-  if (localStorage.getItem("pnrData") === null) {
-    localStorageArr = [];
-  } else {
+  if (localStorage.getItem("pnrData")) {
     localStorageArr = JSON.parse(localStorage.getItem("pnrData"));
+  } else {
+    localStorageArr = [];
   }
   return localStorageArr;
 }
 
 function setLocalStorage(dataArr) {
+  console.log(dataArr);
   localStorage.setItem("pnrData", JSON.stringify(dataArr));
 }
 
