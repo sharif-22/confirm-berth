@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import html2canvas from "html2canvas";
 import { RiCloseFill } from "react-icons/ri";
+import { PiShareFat } from "react-icons/pi";
 import { HiArrowSmallRight } from "react-icons/hi2";
 import { ShimmerButton, ShimmerThumbnail } from "react-shimmer-effects";
 
@@ -132,9 +133,9 @@ Check your PNR on our app 👉 https://yourapp.link`;
           <div className="flex justify-end gap-3 p-3">
             <button
               onClick={handleShare}
-              className="bg-blue-500 text-white px-4 py-1.5 rounded-md hover:bg-blue-600"
+              className="bg-green-500 text-white px-4 py-1.5 rounded-md hover:bg-green-600 flex items-center gap-1"
             >
-              Share
+              <PiShareFat size={20} /> Share
             </button>
             <button
               onClick={onClose}
