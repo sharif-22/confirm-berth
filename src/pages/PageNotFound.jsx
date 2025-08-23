@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 
 const PageNotFound = () => {
   return (
-    <div className="w-fit mx-auto flex flex-col m-10 h-screen p-8 gap-6">
-      <h1 className="text-8xl flex gap-1">
+    <div className="m-10 mx-auto flex h-screen w-fit flex-col gap-6 p-8">
+      <h1 className="flex gap-1 text-8xl">
         <span>4</span> <img src="/notFound.gif" alt="" srcset="" />
         <span className="ml-4">4</span>
       </h1>
@@ -12,7 +12,7 @@ const PageNotFound = () => {
       back.
       <Link
         to="/"
-        className="bg-green-500 p-2 px-6 font-semibold text-lg text-white hover:bg-green-600 rounded w-fit"
+        className="w-fit rounded bg-green-500 p-2 px-6 text-lg font-semibold text-white hover:bg-green-600"
       >
         Back to Station
       </Link>

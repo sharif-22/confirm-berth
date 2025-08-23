@@ -20,6 +20,7 @@ export default function ModalPnrCard({ open, onClose, pnrId }) {
     arrivalDate,
     trainName,
     trainNumber,
+    chartStatus,
   } = getSessionStorage(pnrId) || {};
 
   /** 📸 Snapshot + Share */
@@ -39,7 +40,7 @@ Train: ${trainName} (${trainNumber})
 From: ${boardingPoint} → ${destinationStation}
 Date: ${convertTo24HrDateLabel(dateOfJourney)}
 
-Check your PNR on our app 👉 https://yourapp.link`;
+Check your PNR on our app 👉 https://confirm-berth.vercel.app`;
 
       if (navigator.share) {
         const blob = await (await fetch(dataUrl)).blob();
@@ -62,28 +63,27 @@ Check your PNR on our app 👉 https://yourapp.link`;
   return (
     <div
       onClick={onClose}
-      className={`fixed z-10 inset-0 flex justify-center bg-slate-200/55 items-center overflow-y-auto mx-auto h-full ${
+      className={`fixed inset-0 z-10 mx-auto flex items-center justify-center bg-slate-200/55 ${
         open ? "visible" : "invisible"
       }`}
     >
       {/* modal */}
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`rounded-xl mx-auto bg-white shadow transition-all w-10/12 lg:max-w-lg 
-        ${open ? "scale-100 opacity-100" : "scale-125 opacity-0"}`}
+        className={`mx-auto w-10/12 rounded-xl bg-white shadow transition-all lg:max-w-lg ${open ? "scale-100 opacity-100" : "scale-125 opacity-0"}`}
       >
         {/* 🔹 OLD UI → visible for live preview */}
-        <div className="w-full relative h-fit mx-auto">
+        <div className="relative mx-auto h-fit w-full">
           {pnrNumber ? (
             <div>
-              <h1 className="p-3 text-xl font-medium bg-green-500 rounded-t-md text-white">
+              <h1 className="rounded-t-md bg-green-500 p-3 text-xl font-medium text-white">
                 {pnrNumber}
               </h1>
-              <div className="px-4 py-2 space-y-1">
-                <p className="font-medium text-lg ">
+              <div className="space-y-1 px-4 py-2">
+                <p className="text-lg font-medium">
                   {convertTo24HrDateLabel(dateOfJourney).slice(8)}
                 </p>
-                <p className="flex gap-2 items-center">
+                <p className="flex items-center gap-2">
                   <span className="flex flex-col text-lg">
                     {boardingPoint}
                     <small className="opacity-65">
@@ -98,12 +98,16 @@ Check your PNR on our app 👉 https://yourapp.link`;
                     </small>
                   </span>
                 </p>
-
-                <p className="font-medium opacity-65">
-                  {trainName} ({trainNumber})
-                </p>
+                <div className="flex items-baseline justify-between">
+                  <p className="font-medium opacity-65">
+                    {trainName} ({trainNumber})
+                  </p>
+                  <p className="text-sm font-medium opacity-65">
+                    {chartStatus}
+                  </p>
+                </div>
                 <p className="font-semibold">Current Status </p>
-                <ul className="px-5 space-y-1 list-disc">
+                <ul className="list-disc space-y-1 px-5">
                   {passengerList?.map((data, index) => (
                     <li key={index} className="text-lg font-medium opacity-80">
                       {data.currentStatusDetails}
@@ -113,10 +117,10 @@ Check your PNR on our app 👉 https://yourapp.link`;
               </div>
             </div>
           ) : (
-            <div className="bg-white m-3">
+            <div className="m-3 bg-white">
               <ShimmerThumbnail height={60} rounded />
               <ShimmerThumbnail height={20} rounded />
-              <div className="flex gap-1 w-full">
+              <div className="flex w-full gap-1">
                 <ShimmerButton height={40} rounded />
                 <ShimmerButton height={40} rounded />
               </div>
@@ -133,13 +137,13 @@ Check your PNR on our app 👉 https://yourapp.link`;
           <div className="flex justify-end gap-3 p-3">
             <button
               onClick={handleShare}
-              className="bg-green-500 text-white px-4 py-1.5 rounded-md hover:bg-green-600 flex items-center gap-1"
+              className="flex items-center gap-1 rounded-md bg-green-500 px-4 py-1.5 text-white hover:bg-green-600"
             >
               <PiShareFat size={20} /> Share
             </button>
             <button
               onClick={onClose}
-              className="bg-red-500 text-white px-4 py-1.5 rounded-md hover:bg-red-600 flex items-center gap-1"
+              className="flex items-center gap-1 rounded-md bg-red-500 px-4 py-1.5 text-white hover:bg-red-600"
             >
               <RiCloseFill size={20} /> Close
             </button>
@@ -148,31 +152,40 @@ Check your PNR on our app 👉 https://yourapp.link`;
 
         {/* 🔹 NEW UI → hidden, only for screenshot */}
         {pnrNumber && (
-          <div className="absolute -z-50 opacity-0 pointer-events-none">
+          <div className="pointer-events-none absolute -z-50 opacity-0">
             <div
               ref={cardRef}
-              className="bg-white/95 rounded-2xl shadow-lg overflow-hidden w-[600px] p-0"
+              className="w-[600px] overflow-hidden rounded-2xl bg-white/95 p-0 shadow-lg"
             >
               {/* Header with Logo */}
-              <div className="flex items-center gap-3 content-center align-middle bg-green-600 p-4">
+              <div className="flex content-center items-center gap-3 bg-green-600 p-4 align-middle">
                 <img
                   src="/192x192.jpg"
                   alt="App Logo"
-                  className="w-8 h-8 inline-block bg-green-600"
+                  className="inline-block h-8 w-8 bg-green-600"
                 />
                 <h1 className="text-lg font-semibold text-white">
                   Confirm Berth
                 </h1>
               </div>
 
-              <div className="px-6 py-5 space-y-4">
+              <div className="space-y-4 px-6 py-5">
                 <h2 className="text-2xl font-bold text-gray-800">
                   🚆 PNR: {pnrNumber}
                 </h2>
-                <p className="text-lg text-gray-700">
+                {/* <p className="text-lg text-gray-700">
                   {trainName} ({trainNumber})
-                </p>
-                <div className="flex justify-between items-center text-lg">
+                </p> */}
+                <div className="flex items-baseline justify-between">
+                  <p className="font-medium opacity-65">
+                    {trainName} ({trainNumber})
+                  </p>
+                  <p className="text-sm font-medium opacity-65">
+                    {chartStatus}
+                  </p>
+                </div>
+
+                <div className="flex items-center justify-between text-lg">
                   <div>
                     <p className="font-semibold">{boardingPoint}</p>
                     <small className="text-gray-500">
@@ -187,9 +200,8 @@ Check your PNR on our app 👉 https://yourapp.link`;
                     </small>
                   </div>
                 </div>
-
                 <div>
-                  <p className="font-semibold text-gray-800 mb-2">
+                  <p className="mb-2 font-semibold text-gray-800">
                     Current Status
                   </p>
                   <ul className="space-y-2">
@@ -205,7 +217,7 @@ Check your PNR on our app 👉 https://yourapp.link`;
                 </div>
               </div>
 
-              <div className="bg-gray-100 text-center py-4 px-6 text-sm text-gray-600">
+              <div className="bg-gray-100 px-6 py-4 text-center text-sm text-gray-600">
                 📲 Check live PNR status on our app 👉{" "}
                 <span className="font-semibold text-green-600">
                   confirm-berth.vercel.app

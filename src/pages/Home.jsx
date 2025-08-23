@@ -50,7 +50,10 @@ const Home = () => {
         setSelectedPnr(pnrNum);
         setModelOpen(true);
 
-        const { code, data } = await fetchPnrStatus(pnrNum);
+        const result = await fetchPnrStatus(pnrNum);
+
+        const { code, data } = result;
+        console.log("PNR Search Result:", result);
 
         if (code === 200) {
           const updatedData = addObjectIfNotExists([...dataArr], data);
@@ -71,7 +74,7 @@ const Home = () => {
         setSelectedPnr("");
       }
     },
-    [dataArr, fetchPnrStatus]
+    [dataArr, fetchPnrStatus],
   );
 
   /** --- FETCH PNR DETAILS FOR MODEL --- */
@@ -89,7 +92,7 @@ const Home = () => {
         console.error(error);
       }
     },
-    [fetchPnrStatus]
+    [fetchPnrStatus],
   );
 
   /** --- INPUT CHANGE --- */
@@ -156,20 +159,20 @@ const Home = () => {
       <form
         ref={formRef}
         onSubmit={handleSubmit}
-        className="lg:max-w-5xl w-11/12 bg-slate-200 p-3 space-y-4 mx-auto my-5 rounded"
+        className="mx-auto my-5 w-11/12 space-y-4 rounded bg-slate-200 p-3 lg:max-w-5xl"
       >
         <InputComp pnr={pnr} handelOnChange={handleOnChange}>
-          <button className="bg-green-500 hover:bg-green-500/85 hover:text-black text-white font-medium px-5 py-1.5 rounded">
+          <button className="rounded bg-green-500 px-5 py-1.5 font-medium text-white hover:bg-green-500/85 hover:text-black">
             Submit
           </button>
         </InputComp>
       </form>
 
       {/* Trips toggle buttons */}
-      <div className="lg:max-w-5xl w-11/12 bg-slate-200 mx-auto rounded flex gap-2 p-2">
+      <div className="mx-auto flex w-11/12 gap-2 rounded bg-slate-200 p-2 lg:max-w-5xl">
         <button
           onClick={() => setViewComingTrips(true)}
-          className={`font-medium p-2 w-full rounded ${
+          className={`w-full rounded p-2 font-medium ${
             viewComingTrips ? "bg-green-500 text-white" : "bg-white"
           }`}
           type="button"
@@ -178,7 +181,7 @@ const Home = () => {
         </button>
         <button
           onClick={() => setViewComingTrips(false)}
-          className={`font-medium p-2 w-full rounded ${
+          className={`w-full rounded p-2 font-medium ${
             !viewComingTrips ? "bg-green-500 text-white" : "bg-white"
           }`}
           type="button"
