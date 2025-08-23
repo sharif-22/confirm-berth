@@ -12,7 +12,9 @@ const pnrServiceInstance = axios.create({
 
 export const getPNRStatus = async (pnrNumber) => {
   try {
-    const response = await pnrServiceInstance.get(`/pnrstatus/${pnrNumber}`);
+    const response = await pnrServiceInstance.get(`/pnrstatus/${pnrNumber}`, {
+      withCredentials: true,
+    });
     // console.log("Response from PNR status API:", response);
     return response.data;
   } catch (error) {

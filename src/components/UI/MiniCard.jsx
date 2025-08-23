@@ -20,10 +20,10 @@ const MiniCard = ({ data, openModel }) => {
   return (
     <section
       onClick={openModel}
-      className="bg-slate-200 w-11/12 lg:max-w-5xl mx-auto my-2 p-3 rounded flex justify-between hover:shadow-lg duration-300 transition-all cursor-pointer"
+      className="mx-auto my-2 flex w-11/12 cursor-pointer justify-between rounded bg-slate-200 p-3 transition-all duration-300 hover:shadow-lg lg:max-w-5xl"
     >
       <div className="space-y-2">
-        <p className="font-semibold text-lg">
+        <p className="text-lg font-semibold">
           {trainName} ({trainNumber})
         </p>
         <div className="flex flex-col gap-1 font-medium opacity-85">
@@ -35,9 +35,9 @@ const MiniCard = ({ data, openModel }) => {
             {destinationStation} : {convertTo24HrDateLabel(arrivalDate)}
           </small>
         </div>
-        <p className="font-semibold pnr">PNR - {pnrNumber}</p>
+        <p className="pnr font-semibold">PNR - {pnrNumber}</p>
       </div>
-      <p className="font-semibold text-lg">
+      <p className="text-lg font-semibold">
         {convertTo24HrDateLabel(dateOfJourney)}
       </p>
     </section>
