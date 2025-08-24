@@ -1,4 +1,10 @@
-import React, { useRef, useState, useCallback } from "react";
+import React, {
+  useRef,
+  useState,
+  useCallback,
+  useContext,
+  useEffect,
+} from "react";
 
 import InputComp from "../components/Form/InputComp";
 import MiniCard from "../components/UI/MiniCard";
@@ -17,9 +23,14 @@ import {
 import { addObjectIfNotExists, isObjectExists } from "../helpers/manipulations";
 import { futureTripsByDate, pastTripsByDate } from "../helpers/dayjs";
 import { getPNRStatus } from "../apis/pnrServices";
+import { PnrContext } from "../Context";
 
 const Home = () => {
+  const { pnrs, setPnrs } = useContext(PnrContext);
   const [dataArr, setDataArr] = useState(() => getLocalStorage());
+  console.log("Context PNRs:", pnrs);
+  console.log("dataArr:", dataArr);
+
   const [pnr, setPnr] = useState("");
   const [selectedPnr, setSelectedPnr] = useState("");
   const [modelOpen, setModelOpen] = useState(false);
@@ -28,9 +39,16 @@ const Home = () => {
 
   const formRef = useRef();
 
-  const upComingTrips = futureTripsByDate(dataArr);
+  useEffect(() => {
+    const localPnrData = getLocalStorage();
+    console.log("Local PNR Data:", localPnrData);
+
+    localPnrData && setPnrs(localPnrData);
+  }, []);
+
+  const upComingTrips = futureTripsByDate(pnrs);
   console.log(upComingTrips);
-  const pastTrips = pastTripsByDate(dataArr);
+  const pastTrips = pastTripsByDate(pnrs);
 
   /** --- API CALL --- */
   const fetchPnrStatus = useCallback(async (pnrNumber) => {
@@ -39,6 +57,10 @@ const Home = () => {
       return response;
     } catch (error) {
       console.error("Error fetching PNR status:", error);
+
+      setModelOpen(false);
+      setSelectedPnr("");
+
       throw error;
     }
   }, []);
