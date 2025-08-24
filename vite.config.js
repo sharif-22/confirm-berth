@@ -46,4 +46,9 @@ const manifestForPlugin = {
 export default defineConfig({
   base: "./",
   plugins: [react(), VitePWA(manifestForPlugin)],
+
+  // below is for production build to remove console logs and debuggers
+  esbuild: {
+    drop: ["console", "debugger"], // removes console.* and debugger
+  },
 });

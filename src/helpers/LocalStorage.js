@@ -13,6 +13,11 @@ function setLocalStorage(dataArr) {
   localStorage.setItem("pnrData", JSON.stringify(dataArr));
 }
 
+function clearBrowserStorage() {
+  localStorage.clear();
+  sessionStorage.clear();
+}
+
 function getSessionStorage(key) {
   let sessionStorageArr;
   if (sessionStorage.getItem(key) === null) {
@@ -32,4 +37,5 @@ export {
   setLocalStorage,
   getSessionStorage,
   setSessionStorage,
+  clearBrowserStorage,
 };

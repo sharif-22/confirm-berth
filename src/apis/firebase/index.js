@@ -1,3 +1,4 @@
+import { api } from "../axios.js";
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
@@ -13,29 +14,22 @@ import {
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyB9kKUjDwSS05zgkdQ9yWdNNJMKq509EaM",
-  authDomain: "confirm-berth.firebaseapp.com",
-  projectId: "confirm-berth",
-  storageBucket: "confirm-berth.firebasestorage.app",
-  messagingSenderId: "529936653392",
-  appId: "1:529936653392:web:7dd6c0f962aee4aa610555",
-  measurementId: "G-TBE47MM6F2",
+  apiKey: import.meta.env.VITE_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_APP_ID,
+  measurementId: import.meta.env.VITE_MEASUREMENT_ID,
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
 const analytics = getAnalytics(app);
 
 // Auth
 export const auth = getAuth(app);
 export const provider = new GoogleAuthProvider();
-
-// import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-// import { auth } from "./firebase";
-import { api } from "../axios.js"; // axios instance with baseURL + withCredentials:true
-
-// const provider = new GoogleAuthProvider();
 
 export const signInWithGoogle = async () => {
   try {

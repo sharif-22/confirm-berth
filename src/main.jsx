@@ -13,6 +13,7 @@ import Footer from "./components/Footer";
 // pages
 import Home from "./pages/Home";
 import PageNotFound from "./pages/PageNotFound";
+import { PnrProvider } from "./Context";
 
 const App = () => {
   return (
@@ -41,4 +42,8 @@ const route = createBrowserRouter([
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
-root.render(<RouterProvider router={route} />);
+root.render(
+  <PnrProvider>
+    <RouterProvider router={route} />
+  </PnrProvider>,
+);
