@@ -123,47 +123,6 @@ const Navbar = () => {
                 </div>
               )}
             </li>
-            <li className="relative">
-              {!user ? (
-                <button
-                  onClick={handleLogin}
-                  className="rounded-lg border-2 border-white px-4 py-2 font-semibold text-white duration-300 hover:bg-white hover:text-black"
-                >
-                  Login
-                </button>
-              ) : (
-                <div className="relative">
-                  <p
-                    className="flex items-center gap-2 text-white"
-                    onClick={() => setShowDropdown((prev) => !prev)}
-                  >
-                    <img
-                      src={user?.picture}
-                      alt="Profile"
-                      className="h-9 w-9 cursor-pointer rounded-full border-2 border-white"
-                    />
-                    <span className="font-medium md:hidden">
-                      {user.name?.split(" ")[0]}
-                    </span>
-                    <span className="hidden font-medium md:block">
-                      {user.name}
-                    </span>
-                  </p>
-
-                  {/* Dropdown */}
-                  {showDropdown && (
-                    <div className="absolute right-0 top-8 mt-2 rounded-lg bg-white shadow-lg hover:bg-slate-100">
-                      <button
-                        onClick={handleLogout}
-                        className="flex w-full items-center gap-2 px-5 py-3 text-left text-gray-700"
-                      >
-                        <IoIosLogOut size={20} /> Logout
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )}
-            </li>
           </ol>
         </nav>
       </header>
