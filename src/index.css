@@ -2,13 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-  @apply h-full; /* h-full for fixing the footer at bottom */
-}
-body {
-  @apply h-full; /* h-full for fixing the footer at bottom */
-}
-
-body #root {
-  @apply flex flex-col min-h-full; /* for fixing the footer at bottom */
+@layer base {
+  html {
+    @apply h-full antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply min-h-full bg-zinc-50 font-sans text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100;
+  }
+  #root {
+    @apply flex min-h-dvh flex-col;
+  }
 }

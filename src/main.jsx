@@ -1,49 +1,52 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { Analytics } from "@vercel/analytics/react";
-
 import { RouterProvider, createBrowserRouter, Outlet } from "react-router-dom";
-
+import { ToastContainer, Slide } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 
-// components
-import Navbar from "./components/Navbar";
+import Header from "./components/Header";
 import Footer from "./components/Footer";
-
-// pages
 import Home from "./pages/Home";
 import PageNotFound from "./pages/PageNotFound";
-import { PnrProvider } from "./Context";
+import { PnrProvider, usePnr } from "./store/PnrStore";
 
 const App = () => {
+  const { theme } = usePnr();
   return (
     <>
-      <Navbar />
+      <Header />
       <Outlet />
-      <Analytics />
       <Footer />
+      <ToastContainer
+        position="bottom-center"
+        autoClose={3000}
+        hideProgressBar
+        newestOnTop
+        closeOnClick
+        transition={Slide}
+        theme={theme}
+        toastClassName="!rounded-lg !font-sans !text-sm !font-medium"
+      />
+      <Analytics />
     </>
   );
 };
 
-const route = createBrowserRouter([
+const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
-    children: [
-      {
-        path: "/",
-        element: <Home />,
-      },
-    ],
     errorElement: <PageNotFound />,
+    children: [{ index: true, element: <Home /> }],
   },
 ]);
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-
-root.render(
-  <PnrProvider>
-    <RouterProvider router={route} />
-  </PnrProvider>,
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <React.StrictMode>
+    <PnrProvider>
+      <RouterProvider router={router} />
+    </PnrProvider>
+  </React.StrictMode>,
 );

@@ -1,18 +1,8 @@
-import { api } from "../axios.js";
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithPopup,
-  signOut,
-} from "firebase/auth";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getAnalytics, isSupported } from "firebase/analytics";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
+import { authApi } from "../client.js";
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_API_KEY,
   authDomain: import.meta.env.VITE_AUTH_DOMAIN,
@@ -23,57 +13,25 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_MEASUREMENT_ID,
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+isSupported().then((ok) => ok && getAnalytics(app)).catch(() => {});
 
-// Auth
 export const auth = getAuth(app);
-export const provider = new GoogleAuthProvider();
+const provider = new GoogleAuthProvider();
+provider.setCustomParameters({ prompt: "select_account" });
 
-export const signInWithGoogle = async () => {
+const CANCELLED = ["auth/popup-closed-by-user", "auth/cancelled-popup-request"];
+
+/** Google popup → Firebase ID token → app session cookie. Returns the app user, or null if cancelled. */
+export async function signInWithGoogle() {
   try {
-    // Step 1: Firebase popup
     const result = await signInWithPopup(auth, provider);
-    const user = result.user;
-
-    // Step 2: Get Firebase ID token
-    const idToken = await user.getIdToken();
-
-    // Step 3: Send to backend to exchange for your own JWT (in cookie)
-    const res = await api.post(
-      "/auth/google",
-      {},
-      { headers: { Authorization: `Bearer ${idToken}` } },
-    );
-
-    console.log("Backend session created:", res.data);
-
-    // Step 4: Return both frontend + backend info
-    return {
-      firebaseUser: user,
-      backendUser: res.data.user,
-      message: res.data.message,
-    };
+    const idToken = await result.user.getIdToken();
+    return await authApi.exchange(idToken);
   } catch (error) {
-    console.error("Google sign-in failed:", error);
+    if (CANCELLED.includes(error?.code)) return null;
     throw error;
   }
-};
+}
 
-// Check session (on page reload)
-export const checkSession = async () => {
-  try {
-    const res = await api.get("/auth/me", { withCredentials: true });
-    return res.data.user;
-  } catch (error) {
-    return null; // not logged in
-  }
-};
-
-// Logout
-export const logout = async () => {
-  await api.post("/auth/logout", {}, { withCredentials: true });
-};
-
-export const firebaseSignOut = () => signOut(auth);
+export const firebaseSignOut = () => signOut(auth).catch(() => {});

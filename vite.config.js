@@ -4,7 +4,7 @@ import react from "@vitejs/plugin-react";
 
 const manifestForPlugin = {
   registerType: "prompt",
-  includeAssets: ["favicon.ico", "apple-touch-icon.png", "masked-icon.svg"],
+  includeAssets: ["favicon.ico", "apple-touch-icon.png", "favicon.svg"],
   manifest: {
     name: "Confirm Berth",
     short_name: "Confirm Berth",
@@ -33,8 +33,8 @@ const manifestForPlugin = {
         purpose: "any maskable",
       },
     ],
-    theme_color: "#171717",
-    background_color: "#e8ebf2",
+    theme_color: "#059669",
+    background_color: "#fafafa",
     display: "standalone",
     scope: "/",
     start_url: "/",
@@ -43,12 +43,10 @@ const manifestForPlugin = {
 };
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  base: "./",
+export default defineConfig(({ command }) => ({
+  base: "/",
   plugins: [react(), VitePWA(manifestForPlugin)],
 
-  // below is for production build to remove console logs and debuggers
-  esbuild: {
-    drop: ["console", "debugger"], // removes console.* and debugger
-  },
-});
+  // strip console/debugger from production builds only, so dev logs still work
+  esbuild: command === "build" ? { drop: ["console", "debugger"] } : {},
+}));
