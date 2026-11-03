@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 import react from "@vitejs/plugin-react";
 
@@ -43,8 +43,21 @@ const manifestForPlugin = {
 };
 
 // https://vitejs.dev/config/
-export default defineConfig(({ command }) => ({
+export default defineConfig(({ command, mode }) => ({
   base: "/",
+
+  // In development, /api goes to the local Express server (same origin, like production).
+  server: {
+    proxy: {
+      "/api": {
+        target: (loadEnv(mode, process.cwd(), "VITE_").VITE_PNR_API_BASE_URL || "http://localhost:5000/api").replace(
+          /\/api\/?$/,
+          "",
+        ),
+        changeOrigin: true,
+      },
+    },
+  },
   plugins: [react(), VitePWA(manifestForPlugin)],
 
   // strip console/debugger from production builds only, so dev logs still work

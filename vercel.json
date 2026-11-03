@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://confirm-berth-node.vercel.app/api/:path*"
+    }
+  ]
+}

@@ -1,7 +1,10 @@
 import axios from "axios";
 
+// Always same-origin: Vercel (vercel.json) and the Vite dev server (vite.config.js)
+// forward /api to the Express server. That keeps the login cookie first-party,
+// so browsers that block third-party cookies don't log people out on refresh.
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_PNR_API_BASE_URL,
+  baseURL: "/api",
   withCredentials: true,
   timeout: 20000,
   headers: { "Cache-Control": "no-cache" },
