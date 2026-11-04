@@ -3,7 +3,16 @@ import { VitePWA } from "vite-plugin-pwa";
 import react from "@vitejs/plugin-react";
 
 const manifestForPlugin = {
-  registerType: "prompt",
+  // Install new versions straight away. "prompt" needs an update banner the app never had,
+  // so every deploy sat in "waiting" and people kept running the old cached build.
+  registerType: "autoUpdate",
+  workbox: {
+    skipWaiting: true,
+    clientsClaim: true,
+    cleanupOutdatedCaches: true,
+    // never answer API calls from the offline cache
+    navigateFallbackDenylist: [/^\/api\//],
+  },
   includeAssets: ["favicon.ico", "apple-touch-icon.png", "favicon.svg"],
   manifest: {
     name: "Confirm Berth",
