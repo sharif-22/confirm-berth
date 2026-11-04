@@ -5,6 +5,7 @@ import Modal from "../ui/Modal";
 import StatusBadge from "../ui/StatusBadge";
 import Spinner from "../ui/Spinner";
 import ShareCard from "./ShareCard";
+import LiveStatus from "./LiveStatus";
 import { usePnr } from "../../store/PnrStore";
 import { countdown, fmtDay, fmtFull, fmtTime, isUpcoming, timeAgo } from "../../lib/date";
 import { classify, passengerStatus, tripSummary } from "../../lib/status";
@@ -141,6 +142,13 @@ export default function TripSheet({ trip, open, onClose }) {
           </div>
         </div>
       </div>
+
+      {/* live running status */}
+      {upcoming && trip.trainNumber && (
+        <section className="border-t border-zinc-100 px-5 py-4 sm:px-6 dark:border-zinc-800">
+          <LiveStatus trip={trip} />
+        </section>
+      )}
 
       {/* passengers */}
       <section className="border-t border-zinc-100 px-5 py-4 sm:px-6 dark:border-zinc-800">

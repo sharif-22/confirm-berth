@@ -39,6 +39,12 @@ export const pnrApi = {
   remove: (pnr) => api.delete(`/savedpnr/${pnr}`),
 };
 
+export const liveApi = {
+  /** date = journey date at the boarding station (YYYY-MM-DD); from = boarding station code */
+  status: (train, { date, from }) =>
+    api.get(`/live/${encodeURIComponent(train)}`, { params: { date, ...(from ? { from } : {}) } }).then((r) => r.data),
+};
+
 export const authApi = {
   me: () => api.get("/auth/me").then((r) => r.data.user),
   exchange: (idToken) =>
